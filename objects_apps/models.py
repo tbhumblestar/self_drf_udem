@@ -26,12 +26,11 @@ class WatchList(TimeStampedModel):
     
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=15,choices=watchlist_type)
-    img_url = models.CharField(max_length=100)
+    img_url = models.CharField(max_length=100,null=True)
     platform = models.ForeignKey('StreamPlatform',on_delete=models.CASCADE,related_name='watchlists')
     active = models.BooleanField(default=True)
     avg_rating = models.FloatField(default=0)
     number_rating = models.IntegerField(default=0)
-    
     
     def __str__(self):
         return str(self.title)
