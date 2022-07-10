@@ -11,8 +11,11 @@ class StreamPlatform(models.Model):
 
     def __str__(self):
         return self.name
-    
-class WatchList(models.Model):
+
+    class Meta:
+        db_table = 'streamplatforms'
+
+class WatchList(TimeStampedModel):
     #앞에께 실제로 DB에 들어가는 데이터
     #뒤에께 인간이 잘 인식할 수 있게 한 것
     #여기 적힌거 외에 다른 값은 들어올 수 없다? 체크 필요
@@ -23,6 +26,7 @@ class WatchList(models.Model):
     
     name = models.CharField(max_length=30)
     type = models.CharField(max_length=15,choices=watchlist_type)
+    img_url = models.CharField(max_length=100)
     platform = models.ForeignKey('StreamPlatform',on_delete=models.CASCADE,related_name='watchlists')
     active = models.BooleanField(default=True)
     avg_rating = models.FloatField(default=0)
@@ -32,6 +36,8 @@ class WatchList(models.Model):
     def __str__(self):
         return str(self.title)
 
+    class Meta:
+        db_table = 'watchlists'
 
 class Review(TimeStampedModel):
     review_user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -42,3 +48,6 @@ class Review(TimeStampedModel):
     
     def __str__(self):
         return f"{str(self.review_user.name)}'s review on{str(self.watchlist.title)}"
+
+    class Meta:
+        db_table = 'reviews'
