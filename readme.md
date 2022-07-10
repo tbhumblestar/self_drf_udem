@@ -1,10 +1,11 @@
 # drf공부를 위한 레포
 
-## 프로젝트 구조
+### 프로젝트 구조
     - IDBM 사이트를 클론
-## URL
+    - Model : streamplatform > Watchlist(movie,Tvshow) > Review
+### URL
 
-#### 주요 학습 주제
+### 주요 학습 주제
     - genericview
     - signal / receiver
     - Serializer
