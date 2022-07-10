@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from my_settings import *
+from datetime import timedelta
 
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -29,7 +30,7 @@ SECRET_KEY = SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -155,3 +156,18 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+
+SIMPLE_JWT = {
+    #for test
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    
+    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=60),
+    # 'ROTATE_REFRESH_TOKENS': True,
+}
