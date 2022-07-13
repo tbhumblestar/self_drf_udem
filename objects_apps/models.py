@@ -16,9 +16,8 @@ class StreamPlatform(models.Model):
         db_table = 'streamplatforms'
 
 class WatchList(TimeStampedModel):
-    #앞에께 실제로 DB에 들어가는 데이터
-    #뒤에께 인간이 잘 인식할 수 있게 한 것
-    #여기 적힌거 외에 다른 값은 들어올 수 없다? 체크 필요
+
+    #serializer에서 왼쪽값으로 받는지 테스트함.. 유효성 검사가 진행된다는 뜻
     watchlist_type = [
         ('Mv','Movie'),
         ('TvS','Tv SHOW')
@@ -33,7 +32,7 @@ class WatchList(TimeStampedModel):
     number_rating = models.IntegerField(default=0)
     
     def __str__(self):
-        return str(self.title)
+        return str(self.name)
 
     class Meta:
         db_table = 'watchlists'
@@ -46,7 +45,7 @@ class Review(TimeStampedModel):
     watchlist = models.ForeignKey('WatchList',on_delete = models.CASCADE,related_name='reviews')
     
     def __str__(self):
-        return f"{str(self.review_user.name)}'s review on{str(self.watchlist.title)}"
+        return f"{str(self.review_user.name)}'s review about{str(self.watchlist.title)}"
 
     class Meta:
         db_table = 'reviews'
