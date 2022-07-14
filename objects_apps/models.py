@@ -18,6 +18,7 @@ class StreamPlatform(models.Model):
 class WatchList(TimeStampedModel):
 
     #serializer에서 왼쪽값으로 받는지 테스트함.. 유효성 검사가 진행된다는 뜻
+    #물론 db에는 그냥 들어갈 수 있음. Null=False, Blank=True 정도의 느낌?
     watchlist_type = [
         ('Mv','Movie'),
         ('TvS','Tv SHOW')
