@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-
+from rest_framework.filters import OrderingFilter
 # Create your views here.
 from rest_framework import generics
 from objects_apps.models import *
@@ -32,16 +32,18 @@ class StreamPlatformDetailView(generics.RetrieveUpdateDestroyAPIView):
     
 class WatchListView(generics.ListCreateAPIView):
     permission_classes = [IsAdminOrReadOnly]
-    pagination_class   = CPagination
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = WatchListFilter
+    pagination_class   = WatchListPagination
+    serializer_class = WatchListSerializer
+    queryset = WatchList.objects.all()
     
+    filter_backends = [filters.DjangoFilterBackend,OrderingFilter]
+    filterset_class = WatchListFilter
+    ordering_fields =['platform_id']
     
     # lookup_field, url_kwarg 그리고 filtering기준이 될 data의 propery가 모두 같아야, 의도한 대로 정상적으로 필터링이 됨
     # lookup_field = 'platform_id'
     # permission_classes = [IsAdminOrReadOnly]
-    serializer_class = WatchListSerializer
-    queryset = WatchList.objects.all()
+    
 
 
 
