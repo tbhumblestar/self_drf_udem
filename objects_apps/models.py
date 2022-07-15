@@ -46,7 +46,7 @@ class Review(TimeStampedModel):
     watchlist = models.ForeignKey('WatchList',on_delete = models.CASCADE,related_name='reviews')
     
     def __str__(self):
-        return f"{str(self.review_user.name)}'s review about{str(self.watchlist.title)}"
+        return f"{str(self.review_user.username)}'s review about{str(self.watchlist.name)}"
 
     class Meta:
         db_table = 'reviews'

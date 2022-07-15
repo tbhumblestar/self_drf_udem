@@ -10,9 +10,10 @@ from objects_apps.serializers import (
                                     )
 from rest_framework.permissions import (IsAuthenticated,IsAuthenticatedOrReadOnly)
 
+from rest_framework.exceptions import ValidationError
 from django_filters import rest_framework as filters
 
-from objects_apps.permissions import IsAdminOrReadOnly
+from objects_apps.permissions import IsAdminOrReadOnly,ReviewUserOrReadOnly
 from objects_apps.pagination  import WatchListPagination, LOPagination, CPagination
 from objects_apps.filters import WatchListFilter
 
@@ -54,7 +55,7 @@ class WatchListDetailView(generics.RetrieveUpdateDestroyAPIView):
     
     def get_object(self):
         queryset = self.get_queryset()
-        print(self.kwargs)
+
         filter = {
         'platform_id'  : self.kwargs['platform_id'],
         'id' :self.kwargs['watchlist_id'],
@@ -62,3 +63,44 @@ class WatchListDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         obj = get_object_or_404(queryset,**filter)
         return obj
+    
+class ReviewLCView(generics.ListCreateAPIView):
+    serializer_class = ReviewSerializer
+    # permission_classes = (IsAuthenticated,)
+    
+    def get_queryset(self):
+        watchlist_id = self.kwargs['watchlist_id']
+        return Review.objects.filter(watchlist_id=watchlist_id)
+
+    
+    def perform_create(self,serializer):
+        watchlist_id = self.kwargs.get('watchlist_id')
+        watchlist = WatchList.objects.get(id=watchlist_id)
+        review_user = self.request.user
+        
+        # if Review.objects.filter(watchlist=watchlist,review_user=review_user).exist():
+        #     raise ValidationError("You have already reviewd the watchlist")
+        # else:
+        serializer.save(watchlist_id=watchlist_id,review_user_id=3)
+
+
+
+class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+    # permission_classes = (ReviewUserOrReadOnly,)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        review_id = self.kwargs['review_id']
+        obj = get_object_or_404(queryset,id=review_id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+        
+
+class UserReviewListView(generics.ListAPIView):
+    serializer_class = ReviewSerializer
+    def get_queryset(self):
+        username = self.request.query_params.get('username',None)
+        
+        return Review.objects.filter(review_user__username=username)
